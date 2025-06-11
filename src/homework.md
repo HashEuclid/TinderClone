@@ -49,3 +49,10 @@
 - Create a POST /signup API to add data to database
 - Push some documents using API calls from Postman
 -->
+
+<!--EP06 - Diving into the APIs
+- Difference between the JS Object vs JSON
+- Add the express.json middleware to your app
+- Make your signup API dynamic to receive data from the end user
+- 
+-->
