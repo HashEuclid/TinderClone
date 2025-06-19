@@ -68,4 +68,8 @@
 - Create a custom validation function for gender
 - Improve the DB Schema - put all appropriate validations on each field in Schema
 - Add timestamps to the user schema.
+- Data Sanitization - Add API level validations on PATCH request and signup POST API.
+- Data Sanitization - Add API validations for each field
+- Install Validator from npm
+- Explore and Use validator library functions
 -->
