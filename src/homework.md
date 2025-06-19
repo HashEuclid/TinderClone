@@ -50,9 +50,22 @@
 - Push some documents using API calls from Postman
 -->
 
-<!--EP06 - Diving into the APIs
+<!--EP07 - Diving into the APIs
 - Difference between the JS Object vs JSON
 - Add the express.json middleware to your app
 - Make your signup API dynamic to receive data from the end user
+- User.findOne() with duplicate email ids, which object returned
+- API - GET user by email
+- API - FEED API - GET /feed - get all the users from the database
+- API - GET userById
+- Create a DELETE /user API
 - 
+-->
+
+<!--EP08 - Data Sanitization and Data Validation
+- Explore Schema type options from the documentation
+- Add required, unique, min, max, default, trim, minlength
+- Create a custom validation function for gender
+- Improve the DB Schema - put all appropriate validations on each field in Schema
+- Add timestamps to the user schema.
 -->

@@ -21,8 +21,8 @@ app.post("/signup", async (req, res) => {
 //  GET user by email
 app.get("/user", async (req, res) => {
   try {
-    const user = await User.findOne({emailId: req.body.emailId});
-    if(!user) {
+    const user = await User.findOne({ emailId: req.body.emailId });
+    if (!user) {
       res.status(404).send("User not found");
     } else {
       res.send(user);
@@ -39,14 +39,38 @@ app.get("/user", async (req, res) => {
 });
 
 // FEED API - GET /feed - get all the users from the database
-
-app.get("/feed", async(req, res) => {
-  try{
+app.get("/feed", async (req, res) => {
+  try {
     const users = await User.find({});
     res.send(users);
-  }
-  catch(err) {
+  } catch (err) {
     res.status(400).send("Something went wrong");
+  }
+});
+
+// DELETE a user from the database
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    res.send("User deleted Succesfully");
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
+// Update data of a user
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    const user = await User.findByIdAndUpdate({_id: userId},data,{
+      returnDocument: "after",
+      runValidators: true,
+    });
+    res.send("User Updated Succesfully")
+  } catch (err) {
+    res.status(400).send("Update failed : "+ err.message);
   }
 });
 
