@@ -73,3 +73,11 @@
 - Install Validator from npm
 - Explore and Use validator library functions
 -->
+
+<!--EP09 - Encypting Passwords
+- Validate data in signup API -- create a helper / utility function
+- install bcrpt library package
+- Create a password hash using bcrypt.hash() and save the user with encrypted password
+- Create login API and write the logic
+- Compare passwords and throw errors if email or password is invalid
+-->
