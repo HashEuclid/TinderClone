@@ -5,8 +5,12 @@ const User = require("./models/user");
 const bcrypt = require("bcrypt");
 
 const { validateSignUpData } = require("./utils/validation");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Create a POST API
 app.post("/signup", async (req, res) => {
@@ -14,10 +18,11 @@ app.post("/signup", async (req, res) => {
     // Validation of data
     validateSignUpData(req);
 
+    const { firstName,lastName,emailId,password } = req.body;
+
     // Encypt the password
-    const { password } = req.body;
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log(passwordHash);
+    console.log("passwordHash" + passwordHash);
 
     // Creating a new instance of User Model
     const user = new User({
@@ -27,9 +32,10 @@ app.post("/signup", async (req, res) => {
       password: passwordHash,
     });
 
-    await user.save(); // Data will be s aved to Database
+    await user.save(); // Data will be saved to Database
     res.send("User added succesfully");
   } catch (err) {
+    console.log(err);
     res.status(400).send("ERROR : ", err.message);
   }
 });
@@ -42,18 +48,43 @@ app.post("/login", async (req, res) => {
     // }
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
-      throw new Error("Invalid Credentials");
+      throw new Error("Invalid credentials");
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.validatePassword(password);
+
     if (isPasswordValid) {
+      //  write the logic of Cookie
+      // Create a JWT token
+      const token = await user.getJWT();
+
+      // Add the token to cookie and send the response back to the user
+      res.cookie("token", token, {
+        expires: new Date(Date.now() +8*360000)
+      });
       res.send("Login Succesfull");
     } else {
-      throw new Error("Invalid Credentials");
+      throw new Error("invalid Credentials");
     }
   } catch (err) {
     res.status(400).send("ERROR : " + err.message);
   }
+});
+
+// GET profile
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const { user } = req.user;
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+  // sending a connection request
+  console.log("Sending a connection request");
+
+  res.send("Connection request sent");
 });
 
 //  GET user by email
