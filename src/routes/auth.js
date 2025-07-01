@@ -3,7 +3,7 @@
 // - POST /login
 // - POST /logout
 
-const express = require('express');
+const express = require("express");
 const { validateSignUpData } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
@@ -15,7 +15,7 @@ authRouter.post("/signup", async (req, res) => {
     // Validation of data
     validateSignUpData(req);
 
-    const { firstName,lastName,emailId,password } = req.body;
+    const { firstName, lastName, emailId, password } = req.body;
 
     // Encypt the password
     const passwordHash = await bcrypt.hash(password, 10);
@@ -56,7 +56,7 @@ authRouter.post("/login", async (req, res) => {
 
       // Add the token to cookie and send the response back to the user
       res.cookie("token", token, {
-        expires: new Date(Date.now() +8*360000)
+        expires: new Date(Date.now() + 8 * 360000),
       });
       res.send("Login Succesfull");
     } else {
@@ -67,6 +67,16 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-
+authRouter.post("/logout", async (req, res) => {
+  try {                                     // no need of try catch block
+    res.cookie("token",null,{
+        expires: new Date(Date.now())
+    });
+    res.send("User logged out Succesfully");
+  } catch (err) {
+    console.log(err);
+    res.status(400).send("ERROR : ", err.message);
+  }
+});
 
 module.exports = authRouter;
