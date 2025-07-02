@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+
 
 const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
       required: true,
+      index: true,
       minlength: 4,
+      maxlength:50
     },
     lastName: {
       type: String,
@@ -16,7 +19,7 @@ const userSchema = new mongoose.Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,
+      unique: true,           // automatically creates the index of this field emailId i.e indexed query
       lowercase: true,
       trim: true,
       validate(value) {
@@ -42,6 +45,10 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
+      enum: {
+        values: ["male", "female", "others"],
+        message: `{VALUE} is not a valid gender type`,
+      },
       validate(value) {
         if (!["male", "female", "others"].includes(value)) {
           throw new Error("Gender data is not valid");
@@ -55,17 +62,23 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+userSchema.index({firstName:1,lastName:1});
+
 userSchema.methods.getJWT = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: this}, "DEV@Tinder#790", {
-    expiresIn: "1d",
+  const token = await jwt.sign({ _id: this }, "DEV@Tinder#790", {
+    expiresIn: "7d",
   });
   return token;
 };
-userSchema.methods.validatePassword = async function(passwordInputByUser) {
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
   const user = this;
-  const passwordHash = user.password
-  const isPasswordValid = await bcrypt.compare(passwordInputByUser,passwordHash);
+  const passwordHash = user.password;
+  const isPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash
+  );
   return isPasswordValid;
-}
+};
 module.exports = mongoose.model("User", userSchema);

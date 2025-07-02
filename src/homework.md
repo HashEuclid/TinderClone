@@ -112,3 +112,19 @@
 - Create a PATCH /profile/password API --- Forgot password API.
 - Make sure you validate all data in every POST, PATCH APIs.
 -->  
+
+<!--EP11 - Logical DB query & Compound Indexes
+- Read about compound indexes in mongdb website -- article
+- Read more about indexes in mongoDB
+- Why do we need an index in DB?
+- What are the advantages and disadvantages of creating indexes?
+- WHat are the disadvantages of creating lot of indexes
+- 
+- Create a connectionRequestSchema
+- Add proper validation
+- Send connection Request API
+- Proper validation of data 
+- Think about all corner cases and handle them
+- $or query and $and query in mongoDB - read more about all logical queries
+- Schema.pre("save",function(next) {})
+-->  
