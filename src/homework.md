@@ -127,4 +127,5 @@
 - Think about all corner cases and handle them
 - $or query and $and query in mongoDB - read more about all logical queries
 - Schema.pre("save",function(next) {})
+- ALWAYS THINK ABOUT CORNER CASES
 -->  
