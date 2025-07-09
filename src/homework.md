@@ -129,3 +129,12 @@
 - Schema.pre("save",function(next) {})
 - ALWAYS THINK ABOUT CORNER CASES
 -->  
+
+<!--EP12 - Ref, populate & thought process of writing APIs
+- ALWAYS THINK ABOUT CORNER CASES
+- Write code with proper validations for POST /request/review/:status/:requestId
+- Read more about ref and populate https://mongoosejs.com/docs/populate.html
+- Create GET /user/requests/received with all the checks
+- Create GET /user/connections.
+- 
+-->  
