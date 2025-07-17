@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       index: true,
       minlength: 4,
-      maxlength:50
+      maxlength: 50,
     },
     lastName: {
       type: String,
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,           // automatically creates the index of this field emailId i.e indexed query
+      unique: true, // automatically creates the index of this field emailId i.e indexed query
       lowercase: true,
       trim: true,
       validate(value) {
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
       maxlength: 100,
       validate(value) {
         if (!validator.isStrongPassword(value)) {
-          throw new Error("Enter a strong password :" + value);
+          throw new Error("Enter a Strong Password :" + value);
         }
       },
     },
@@ -55,6 +55,19 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    photoUrl: {
+      type: String,
+      default: "https://svgsilh.com/svg_v2/659651.svg",
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Invalid Photo URL " + value);
+        }
+      },
+    },
+    about: {
+      type: String,
+      default: "This is a default description of the user!",
+    },
     skills: {
       type: [String],
     },
@@ -62,12 +75,11 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-
-userSchema.index({firstName:1,lastName:1});
+userSchema.index({ firstName: 1, lastName: 1 });
 
 userSchema.methods.getJWT = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: this }, "DEV@Tinder#790", {
+  const token = await jwt.sign({ _id: user._id }, "DEV@Tinder#790", {
     expiresIn: "7d",
   });
   return token;

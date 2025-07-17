@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const connectDB = require("./config/database");
 const User = require("./models/user");
+const cors = require("cors");
 
 
 const cookieParser = require("cookie-parser");
@@ -10,6 +11,9 @@ const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
+
+
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -62,17 +66,20 @@ app.delete("/user", async (req, res) => {
 
 // Update data of a user
 app.patch("/user/:userId", async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.params?.userId;
   const data = req.body;
 
   try {
     // Check for not allowing the user to update specific fields
-    const ALLOWED_UPDATES = ["userId", "gender", "age", "skills", "gender"];
+    const ALLOWED_UPDATES = [ "gender", "skills", "gender", "photoUrl", "about"];
     const isUpdateAllowed = Object.keys(data).every((k) =>
       ALLOWED_UPDATES.includes(k)
     );
     if (!isUpdateAllowed) {
       throw new Error("Update not allowed");
+    }
+    if(data?.skills.length >10) {
+      throw new Error("Skills can not be more than 10");
     }
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       returnDocument: "after",
