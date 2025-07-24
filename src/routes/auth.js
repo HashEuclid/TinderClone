@@ -42,6 +42,7 @@ authRouter.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
     // if (validator.isEmail(emailId)) {
     // }
+    // Check if the user is there in the database 
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
       throw new Error("Invalid credentials");
@@ -58,7 +59,7 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 360000),
       });
-      res.send("Login Succesfull");
+      res.send(user);
     } else {
       throw new Error("invalid Credentials");
     }

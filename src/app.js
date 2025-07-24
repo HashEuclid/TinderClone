@@ -13,7 +13,10 @@ const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
 
 
-app.use(cors());
+app.use(cors({
+  origin:"http://localhost:5173", // Whitelisting the domain name
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -43,15 +46,15 @@ app.get("/user", async (req, res) => {
   }
 });
 
-// FEED API - GET /feed - get all the users from the database
-app.get("/feed", async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (err) {
-    res.status(400).send("Something went wrong");
-  }
-});
+// // FEED API - GET /feed - get all the users from the database
+// app.get("/feed", async (req, res) => {
+//   try {
+//     const users = await User.find({});
+//     res.send(users);
+//   } catch (err) {
+//     res.status(400).send("Something went wrong");
+//   }
+// });
 
 // DELETE a user from the database
 app.delete("/user", async (req, res) => {

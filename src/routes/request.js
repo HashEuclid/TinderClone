@@ -17,9 +17,9 @@ requestRouter.post(
 
       const allowedStatus = ["ignored", "interested"];
 
+      // If the random userId is used for sending the connecton request
       const toUser = await User.findById(toUserId);
 
-      //   If the random userId is used for sending the connecton request
       if (!toUser) {
         return res.status(400).json({ message: "User not found!" });
       }
@@ -50,7 +50,7 @@ requestRouter.post(
 
       const data = await connectionRequest.save(); // save into the DB
       res.json({
-        message: req.user.firstName + status + toUser.firstName,
+        message: req.user.firstName +" "+ status +" "+ toUser.firstName,
         data,
       });
     } catch (err) {
@@ -74,7 +74,7 @@ requestRouter.post(
       const loggedInUser = req.user;
       const { status, requestId } = req.params;
 
-      const allowedStatus = ["interested", "rejected"];
+      const allowedStatus = ["accepted", "rejected"];
       if (!allowedStatus.includes(status)) {
         return res.status(400).json({ message: "Status not allowed" });
       }

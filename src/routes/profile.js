@@ -23,7 +23,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
     Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
     // console.log(loggedInUser)
-    await loggedInUser.save();
+    await loggedInUser.save(); // save the data in Database
 
     res.json({
       message: `${loggedInUser.firstName},your profile is updated succesfully`,

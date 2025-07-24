@@ -4,7 +4,7 @@ const ConnectionRequestModel = require("../models/connectionRequest");
 const userRouter = express.Router();
 const User = require("../models/user");
 
-const USER_SAFE_DATA = "firstName lastName age skills";
+const USER_SAFE_DATA = "firstName lastName age skills photoUrl about gender";
 
 // Get all the pending connection requests for the loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
@@ -23,7 +23,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   }
 });
 
-userRouter.get("user/connections", userAuth, async (req, res) => {
+userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
@@ -49,7 +49,7 @@ userRouter.get("user/connections", userAuth, async (req, res) => {
   }
 });
 
-userRouter.get("/user/feed", userAuth, async (req, res) => {
+userRouter.get("/feed", userAuth, async (req, res) => {
   try {
     // User should see all the user cards except
     // 1. his own cards
@@ -66,7 +66,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     const skip = (page - 1) * limit;
 
     //  find all the connection request that i have snt or received
-    const connectionRequest = await ConnectionRequest.find({
+    const connectionRequest = await ConnectionRequestModel.find({
       $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
     }).select("fromUserId toUserId");
 
