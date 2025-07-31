@@ -29,8 +29,15 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
     });
 
-    await user.save(); // Data will be saved to Database
-    res.send("User added succesfully");
+    const savedUser = await user.save(); // Data will be saved to Database
+    // Create a JWT token
+    const token = await savedUser.getJWT();
+
+    // Add the token to cookie and send the response back to the user
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 8 * 360000),
+    });
+    res.json({ message: "User added succesfully", data: savedUser });
   } catch (err) {
     console.log(err);
     res.status(400).send("ERROR : ", err.message);
@@ -42,7 +49,7 @@ authRouter.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
     // if (validator.isEmail(emailId)) {
     // }
-    // Check if the user is there in the database 
+    // Check if the user is there in the database
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
       throw new Error("Invalid credentials");
@@ -69,9 +76,10 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-  try {                                     // no need of try catch block
-    res.cookie("token",null,{
-        expires: new Date(Date.now())
+  try {
+    // no need of try catch block
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
     });
     res.send("User logged out Succesfully");
   } catch (err) {
