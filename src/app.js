@@ -3,6 +3,7 @@ const app = express();
 const connectDB = require("./config/database");
 const User = require("./models/user");
 const cors = require("cors");
+require('dotenv').config()
 
 
 const cookieParser = require("cookie-parser");
@@ -97,7 +98,7 @@ app.patch("/user/:userId", async (req, res) => {
 connectDB()
   .then(() => {
     console.log("Cluster connection established....");
-    app.listen(7777, () => {
+    app.listen(process.env.PORT, () => {
       console.log("Server is successfully listening on port 7777");
     });
   })
