@@ -3,29 +3,29 @@ const app = express();
 const connectDB = require("./config/database");
 const User = require("./models/user");
 const cors = require("cors");
-require('dotenv').config()
-
+require("dotenv").config();
+require("./utils/cronjob");
 
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const authRouter = require('./routes/auth');
-const profileRouter = require('./routes/profile');
-const requestRouter = require('./routes/request');
-const userRouter = require('./routes/user');
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
 
-
-app.use(cors({
-  origin:"http://localhost:5173", // Whitelisting the domain name
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Whitelisting the domain name
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/",authRouter);
-app.use("/",profileRouter);
-app.use("/",requestRouter);
-app.use("/",userRouter);
-
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
 
 //  GET user by email
 app.get("/user", async (req, res) => {
@@ -75,14 +75,14 @@ app.patch("/user/:userId", async (req, res) => {
 
   try {
     // Check for not allowing the user to update specific fields
-    const ALLOWED_UPDATES = [ "gender", "skills", "gender", "photoUrl", "about"];
+    const ALLOWED_UPDATES = ["gender", "skills", "gender", "photoUrl", "about"];
     const isUpdateAllowed = Object.keys(data).every((k) =>
       ALLOWED_UPDATES.includes(k)
     );
     if (!isUpdateAllowed) {
       throw new Error("Update not allowed");
     }
-    if(data?.skills.length >10) {
+    if (data?.skills.length > 10) {
       throw new Error("Skills can not be more than 10");
     }
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
