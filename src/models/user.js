@@ -55,6 +55,13 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    isPremium : {
+      type:Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+    },
     photoUrl: {
       type: String,
       default: "https://svgsilh.com/svg_v2/659651.svg",
